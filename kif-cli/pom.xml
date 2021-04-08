@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.firkin.kif</groupId>
+  <artifactId>kif-cli</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>kif-cli</name>
+  <url>https://firkin.io/kif</url>
+
+  <parent>
+    <artifactId>kif-parent</artifactId>
+    <groupId>io.firkin.kif</groupId>
+    <version>0.1-SNAPSHOT</version>
+    <relativePath>../kif-parent</relativePath>
+  </parent>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <graal.version>21.0.0</graal.version>
+    <kif.main>io.firkin.kif.App</kif.main>
+    <kif.cli.name>kif</kif.cli.name>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.graalvm.nativeimage</groupId>
+        <artifactId>native-image-maven-plugin</artifactId>
+        <version>${graal.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>native-image</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <imageName>${kif.cli.name}</imageName>
+          <mainClass>${kif.main}</mainClass>
+          <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
