@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-package io.firkin.kif.config.context;
+package io.firkin.kif.commands;
 
-public class Credential {
+public class KafkaCommand {
+
 }

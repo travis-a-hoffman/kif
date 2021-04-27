@@ -3,10 +3,10 @@
   "disable_update_check": false,
   "disable_updates": false,
   "no_browser": false,
-  "platforms": { },
-  "credentials": { },
-  "contexts": { },
-  "context_states": { },
+  "platforms": {},
+  "credentials": {},
+  "contexts": {},
+  "context_states": {},
   "current_context": "",
   "anonymous_id": ""
 }

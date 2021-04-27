@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #
 # Copyright © 2021 Kif Contributors (https://kif.firkin.io/)
 # Copyright © 2021 Firkin IO (https://firkin.io/)
@@ -16,8 +15,5 @@
 # limitations under the License.
 #
 
-jenv shell graalvm64-11.0.10
-sdk use java 21.0.0.r11-grl > /dev/null
-# Run these from the root 'kif' folder
-alias kifkat=`pwd`/kif-cli/target/kifkat
-alias kif=`pwd`/kif-cli/target/kif
+curl "https://api.mockaroo.com/api/13a5dd70?count=10&key=e0ca77c0"
+#curl "https://api.mockaroo.com/api/13a5dd70?count=100&key=e0ca77c0" > "target/data-tmp/credit-application.json"

@@ -15,7 +15,22 @@
  * limitations under the License.
  */
 
-package io.firkin.kif.config.context;
+package io.firkin.kif.utils;
 
-public class Credential {
+public class JavaFakerInputStream<T> implements RecordInputStream {
+
+  @Override
+  public boolean hasNext() {
+    return false;
+  }
+
+  @Override
+  public T read() {
+    return null;
+  }
+
+  @Override
+  public void close() {
+
+  }
 }

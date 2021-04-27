@@ -15,7 +15,22 @@
  * limitations under the License.
  */
 
-package io.firkin.kif.config.context;
+package io.firkin.kif.commands;
 
-public class Credential {
+public class HelpCommand extends SubCommand {
+
+  private static final String NAME = "help";
+  private static final String SUMMARY = "help about any command";
+
+  public static String name() {
+    return NAME;
+  }
+
+  private static final String[] usage = {
+      "help               help about any command",
+  };
+
+  public String[] usage(String[] options) {
+    return usage;
+  }
 }

@@ -15,7 +15,12 @@
  * limitations under the License.
  */
 
-package io.firkin.kif.config.context;
+package io.firkin.kif.utils;
 
-public class Credential {
+public interface RecordInputStream<T> {
+  boolean hasNext();
+
+  T read();
+
+  void close();
 }

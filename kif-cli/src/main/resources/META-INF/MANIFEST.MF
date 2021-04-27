@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 Built-By: travis@firkin.io
 Created-By: Apache Maven 3.6.3
 Build-Jdk: 1.11
-Main-Class: io.firkin.kif.App
+Main-Class: io.firkin.kif.KifCli

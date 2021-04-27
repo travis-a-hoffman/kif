@@ -1,56 +1,112 @@
+<!--
+  ~ Copyright © 2021 Kif Contributors (https://kif.firkin.io/)
+  ~ Copyright © 2021 Firkin IO (https://firkin.io/)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.firkin.kif</groupId>
-  <artifactId>kif-cli</artifactId>
-  <version>0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
-  <name>kif-cli</name>
-  <url>https://firkin.io/kif</url>
-
-  <parent>
-    <artifactId>kif-parent</artifactId>
     <groupId>io.firkin.kif</groupId>
+    <artifactId>kif-cli</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <relativePath>../kif-parent</relativePath>
-  </parent>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <graal.version>21.0.0</graal.version>
-    <kif.main>io.firkin.kif.App</kif.main>
-    <kif.cli.name>kif</kif.cli.name>
-  </properties>
+    <packaging>jar</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-  </dependencies>
+    <name>kif-cli</name>
+    <url>https://firkin.io/kif</url>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.graalvm.nativeimage</groupId>
-        <artifactId>native-image-maven-plugin</artifactId>
-        <version>${graal.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>native-image</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <configuration>
-          <imageName>${kif.cli.name}</imageName>
-          <mainClass>${kif.main}</mainClass>
-          <buildArgs>-H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <parent>
+        <artifactId>kif-parent</artifactId>
+        <groupId>io.firkin.kif</groupId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../kif-parent</relativePath>
+    </parent>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <graal.version>21.0.0</graal.version>
+        <jline.version>3.19.0</jline.version>
+        <kif.cli.main>io.firkin.kif.KifCli</kif.cli.main>
+        <kif.cli.name>kif</kif.cli.name>
+        <kif.kat.cli.main>io.firkin.kif.KifGenCli</kif.kat.cli.main>
+        <kif.kat.cli.name>kifkat</kif.kat.cli.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>${jline.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>6.2.0-118-ccs</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.graalvm.nativeimage</groupId>
+                <artifactId>native-image-maven-plugin</artifactId>
+                <version>${graal.version}</version>
+                <executions>
+                    <execution>
+                        <id>kif-cli</id>
+                        <goals>
+                            <goal>native-image</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <imageName>${kif.cli.name}</imageName>
+                            <mainClass>${kif.cli.main}</mainClass>
+                            <buildArgs>--enable-http --enable-https -H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>kif-kat-cli</id>
+                        <goals>
+                            <goal>native-image</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <imageName>${kif.kat.cli.name}</imageName>
+                            <mainClass>${kif.kat.cli.main}</mainClass>
+                            <!-- force-fallback because JSON/AVRO, etc dynamically loads classes. -->
+                            <!-- enable-https will draw in JCA -->
+                            <buildArgs>--force-fallback --enable-http --enable-https -H:+PrintClassInitialization -H:+ReportExceptionStackTraces</buildArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
